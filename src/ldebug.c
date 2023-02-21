@@ -671,3 +671,38 @@ void luaG_traceexec (lua_State *L) {
   }
 }
 
+int getenvuvidx(lua_State* L, int funcindex) {
+  const char *name;
+  int i;
+  int idx = -1;
+  luaL_checktype(L, funcindex, LUA_TFUNCTION);  /* closure */
+  for (i = 1;; i++) {
+    name = lua_getupvalue(L, 1, i);
+    if (!name) 
+      break;
+    else if (strcmp(name, LUA_ENV) == 0) {
+      idx = i;
+      break;
+    }
+  }
+  return idx;
+}
+
+int searchenvref(Proto* p, int uvidx) {
+  
+}
+
+/* search instruction, get all keys that use GETTABUP with _ENV*/
+int luaG_searchenvref(lua_State* L) {
+  int funcindex = 1;
+  int uvidx = getenvuvidx(L, funcindex);
+  if (uvidx == -1)
+    return 0;
+  StkId fi = index2addr(L, funcindex);
+  LClosure *f = clLvalue(fi);
+  Proto* p = f->p;
+  while (p) {
+
+  }
+  return 1;
+}

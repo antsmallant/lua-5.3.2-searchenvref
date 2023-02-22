@@ -13,6 +13,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "lua.h"
 
@@ -675,8 +676,7 @@ int getenvuvidx(lua_State* L, int funcindex) {
   const char *name;
   int i;
   int idx = -1;
-  luaL_checktype(L, funcindex, LUA_TFUNCTION);  /* closure */
-  for (i = 1;; i++) {
+  for (i = 0;; i++) {
     name = lua_getupvalue(L, 1, i);
     if (!name) 
       break;
@@ -688,21 +688,28 @@ int getenvuvidx(lua_State* L, int funcindex) {
   return idx;
 }
 
-int searchenvref(Proto* p, int uvidx) {
-  
-}
 
 /* search instruction, get all keys that use GETTABUP with _ENV*/
 int luaG_searchenvref(lua_State* L) {
-  int funcindex = 1;
+  int funcindex = 0;
   int uvidx = getenvuvidx(L, funcindex);
   if (uvidx == -1)
     return 0;
-  StkId fi = index2addr(L, funcindex);
-  LClosure *f = clLvalue(fi);
+  LClosure *f = lua_topointer(L, funcindex);
   Proto* p = f->p;
-  while (p) {
-
+  int pc;
+  for (pc = 0; pc < p->sizecode; pc++) {
+    printf("pc %d\n", pc);
+    Instruction i = p->code[pc];
+    OpCode op = GET_OPCODE(i);
+    int t = GETARG_B(i);  /* table index */
+    if (op == OP_GETTABUP && t == uvidx) {
+      int k = GETARG_C(i);  /* key index */
+      const char *name = NULL;  /* to avoid warnings */
+      kname (p, pc, k, &name);
+      printf("luaG_searchenvref:%s\n", name);
+    }
   }
+  lua_pushinteger(L, uvidx);
   return 1;
 }

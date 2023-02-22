@@ -35,5 +35,7 @@ LUAI_FUNC const char *luaG_addinfo (lua_State *L, const char *msg,
 LUAI_FUNC l_noret luaG_errormsg (lua_State *L);
 LUAI_FUNC void luaG_traceexec (lua_State *L);
 
+LUAI_FUNC int luaG_searchenvref(lua_State* L);
+
 
 #endif

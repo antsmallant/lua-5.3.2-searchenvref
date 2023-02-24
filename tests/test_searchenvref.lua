@@ -1,9 +1,25 @@
-local b = 100;
+local b = 100
+local xyz = 10
+
 local function f()
-    print(b);
-    print(a);
+    print(b)
+    print(a)
 
     _ENV.d = 100
+
+    local function m()
+        print(b)
+        print(x)
+
+        local function n()
+            print(b)
+            print(x)
+        end
+    end
+
+    local function g()
+        print(xyz)
+    end
 end
 
 local r = debug.searchenvref(f)

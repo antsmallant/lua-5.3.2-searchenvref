@@ -690,16 +690,8 @@ int getenvuvidx (lua_State* L, int funcindex) {
 }
 
 
-/* get all keys that use GETTABUP to get field from the upvalue _ENV*/
-int luaG_searchenvref (lua_State* L, int funcindex) {
-  int uvidx = getenvuvidx(L, funcindex);
-  if (uvidx == -1) {
-    return 0;
-  }
-  LClosure *f = lua_topointer(L, funcindex);
-  Proto* p = f->p;
+void auxsearchenv(lua_State* L, Proto* p, int uvidx) {
   int pc;
-  lua_newtable(L);
   for (pc = 0; pc < p->sizecode; pc++) {
     Instruction i = p->code[pc];
     int t, k;
@@ -729,5 +721,21 @@ int luaG_searchenvref (lua_State* L, int funcindex) {
         break;
     };
   }
+
+  /* search from sub proto */
+  int i, n = p->sizep;
+  for (i = 0; i < n; i++)
+    auxsearchenv(L, p->p[i], uvidx);  
+}
+
+/* get all keys that a function get/set field from the upvalue _ENV*/
+int luaG_searchenvref (lua_State* L, int funcindex) {
+  int uvidx = getenvuvidx(L, funcindex);
+  if (uvidx == -1)
+    return 0;
+  LClosure *f = lua_topointer(L, funcindex);
+  Proto* p = f->p;
+  lua_newtable(L);
+  auxsearchenv(L, p, uvidx);
   return 1;
 }

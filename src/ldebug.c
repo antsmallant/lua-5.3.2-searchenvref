@@ -702,15 +702,32 @@ int luaG_searchenvref (lua_State* L, int funcindex) {
   lua_newtable(L);
   for (pc = 0; pc < p->sizecode; pc++) {
     Instruction i = p->code[pc];
+    int t, k;
     OpCode op = GET_OPCODE(i);
-    int t = GETARG_B(i);  /* table index */
-    if (op == OP_GETTABUP && t == uvidx) {
-      int k = GETARG_C(i);  /* key index */
-      const char *name = NULL;  /* to avoid warnings */
-      kname (p, pc, k, &name);
-      lua_pushinteger(L, 1);
-      lua_setfield(L, -2, name);
-    }
+    switch (op) {
+      case OP_GETTABUP:
+        t = GETARG_B(i);  /* table index */
+        if (t == uvidx) {
+          k = GETARG_C(i);  /* key index */
+          const char *name = NULL;  /* to avoid warnings */
+          kname (p, pc, k, &name);
+          lua_pushinteger(L, 1);
+          lua_setfield(L, -2, name);
+        }
+        break;
+      case OP_SETTABUP:
+        t = GETARG_A(i); /* table index */
+        if (t == uvidx) {
+          k = GETARG_B(i);  /* key index */
+          const char *name = NULL;  /* to avoid warnings */
+          kname (p, pc, k, &name);
+          lua_pushinteger(L, 1);
+          lua_setfield(L, -2, name);          
+        }
+        break;
+      default:
+        break;
+    };
   }
   return 1;
 }

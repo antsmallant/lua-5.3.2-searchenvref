@@ -2,6 +2,8 @@ local b = 100;
 local function f()
     print(b);
     print(a);
+
+    _ENV.d = 100
 end
 
 local r = debug.searchenvref(f)

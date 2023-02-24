@@ -677,7 +677,7 @@ int getenvuvidx (lua_State* L, int funcindex) {
   const char *name;
   int i;
   int idx = -1;
-  for (i = 1; ; i++) {
+  for (i = 1;; i++) {
     name = lua_getupvalue(L, funcindex, i);
     if (!name)
       break;
@@ -727,6 +727,7 @@ void auxsearchenv(lua_State* L, Proto* p, int uvidx) {
   for (i = 0; i < n; i++)
     auxsearchenv(L, p->p[i], uvidx);  
 }
+
 
 /* get all keys that a function get/set field from the upvalue _ENV*/
 int luaG_searchenvref (lua_State* L, int funcindex) {

@@ -22,7 +22,9 @@ local function f()
     end
 end
 
-local r = debug.searchenvref(f)
+print("----------------------------------------")
+print("test1 output:")
+local r = assert(debug.searchenvref(f))
 if r then
     for k, v in pairs(r) do
         print(k, v)
@@ -30,10 +32,23 @@ if r then
 end
 
 --[[
-expect output:
-
+expect output (kv may not in the sample order):
 d       true
 print   true
 x       true
 a       true
+]]
+
+
+print("----------------------------------------")
+print("test2 output:")
+local function g()
+end
+local r = debug.searchenvref(g)
+print(r)
+assert(r == nil)
+
+--[[
+expect output:
+nil
 ]]

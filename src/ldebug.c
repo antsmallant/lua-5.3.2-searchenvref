@@ -703,7 +703,7 @@ void auxsearchenv(lua_State* L, Proto* p, int uvidx) {
           k = GETARG_C(i);  /* key index */
           const char *name = NULL;  /* to avoid warnings */
           kname (p, pc, k, &name);
-          lua_pushinteger(L, 1);
+          lua_pushboolean(L, 1);
           lua_setfield(L, -2, name);
         }
         break;
@@ -713,7 +713,7 @@ void auxsearchenv(lua_State* L, Proto* p, int uvidx) {
           k = GETARG_B(i);  /* key index */
           const char *name = NULL;  /* to avoid warnings */
           kname (p, pc, k, &name);
-          lua_pushinteger(L, 1);
+          lua_pushboolean(L, 1);
           lua_setfield(L, -2, name);          
         }
         break;

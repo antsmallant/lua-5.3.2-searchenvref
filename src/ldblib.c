@@ -429,28 +429,10 @@ static int db_traceback (lua_State *L) {
 }
 
 
-/* search instruction, get all keys that use GETTABUP with _ENV*/
-// static int db_searchenvref(lua_State* L) {
-//   const char *name;
-//   int i;
-//   int idx = -1;
-//   luaL_checktype(L, 1, LUA_TFUNCTION);  /* closure */
-//   for (i = 1; ; i++) {
-//     name = lua_getupvalue(L, 1, i);
-//     if (!name)
-//       break;
-//     if (strcmp(name, "_ENV") == 0) {
-//       idx = i;
-//       break;
-//     }
-//   }
-//   lua_pushinteger(L, idx);
-//   return 1;
-// }
-
 static int db_searchenvref(lua_State* L) {
-  return luaG_searchenvref(L);
+  return luaG_searchenvref(L, 1);
 }
+
 
 static const luaL_Reg dblib[] = {
   {"debug", db_debug},

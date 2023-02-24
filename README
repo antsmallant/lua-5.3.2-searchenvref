@@ -1,6 +1,12 @@
+# about
+this is a demo, showing how to get all field names that a function used to index from the upvalue _ENV.
 
-This is Lua 5.3.2, released on 25 Nov 2015.
 
-For installation instructions, license details, and
-further information about Lua, see doc/readme.html.
+# usage
+* make linux && make local
+* chmod +x ./runtest && ./runtest
 
+
+# the functions i add to do the job
+ldblib.c : db_searchenvref
+ldebug.c : luaG_searchenvref

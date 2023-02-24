@@ -672,16 +672,17 @@ void luaG_traceexec (lua_State *L) {
   }
 }
 
-int getenvuvidx(lua_State* L, int funcindex) {
+
+int getenvuvidx (lua_State* L, int funcindex) {
   const char *name;
   int i;
   int idx = -1;
-  for (i = 0;; i++) {
+  for (i = 1; ; i++) {
     name = lua_getupvalue(L, funcindex, i);
-    if (!name) 
+    if (!name)
       break;
     else if (strcmp(name, LUA_ENV) == 0) {
-      idx = i;
+      idx = i-1; /*lua api start at 1, but c array start at 0*/
       break;
     }
   }
@@ -689,20 +690,17 @@ int getenvuvidx(lua_State* L, int funcindex) {
 }
 
 
-/* search instruction, get all keys that use GETTABUP with _ENV*/
-int luaG_searchenvref(lua_State* L) {
-  int funcindex = 1;
+/* get all keys that use GETTABUP to get field from the upvalue _ENV*/
+int luaG_searchenvref (lua_State* L, int funcindex) {
   int uvidx = getenvuvidx(L, funcindex);
   if (uvidx == -1) {
-    lua_pushinteger(L, uvidx);
-    return 1;
+    return 0;
   }
-    
   LClosure *f = lua_topointer(L, funcindex);
   Proto* p = f->p;
   int pc;
+  lua_newtable(L);
   for (pc = 0; pc < p->sizecode; pc++) {
-    printf("pc %d\n", pc);
     Instruction i = p->code[pc];
     OpCode op = GET_OPCODE(i);
     int t = GETARG_B(i);  /* table index */
@@ -710,9 +708,9 @@ int luaG_searchenvref(lua_State* L) {
       int k = GETARG_C(i);  /* key index */
       const char *name = NULL;  /* to avoid warnings */
       kname (p, pc, k, &name);
-      printf("luaG_searchenvref:%s\n", name);
+      lua_pushinteger(L, 1);
+      lua_setfield(L, -2, name);
     }
   }
-  lua_pushinteger(L, uvidx);
   return 1;
 }

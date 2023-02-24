@@ -28,3 +28,12 @@ if r then
         print(k, v)
     end
 end
+
+--[[
+expect output:
+
+d       true
+print   true
+x       true
+a       true
+]]

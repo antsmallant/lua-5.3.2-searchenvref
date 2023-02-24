@@ -734,7 +734,7 @@ int luaG_searchenvref (lua_State* L, int funcindex) {
   int uvidx = getenvuvidx(L, funcindex);
   if (uvidx == -1)
     return 0;
-  LClosure *f = lua_topointer(L, funcindex);
+  LClosure* f = cast(LClosure*, lua_topointer(L, funcindex));
   Proto* p = f->p;
   lua_newtable(L);
   auxsearchenv(L, p, uvidx);

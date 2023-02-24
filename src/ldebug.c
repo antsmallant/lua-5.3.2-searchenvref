@@ -677,7 +677,7 @@ int getenvuvidx(lua_State* L, int funcindex) {
   int i;
   int idx = -1;
   for (i = 0;; i++) {
-    name = lua_getupvalue(L, 1, i);
+    name = lua_getupvalue(L, funcindex, i);
     if (!name) 
       break;
     else if (strcmp(name, LUA_ENV) == 0) {
@@ -691,10 +691,13 @@ int getenvuvidx(lua_State* L, int funcindex) {
 
 /* search instruction, get all keys that use GETTABUP with _ENV*/
 int luaG_searchenvref(lua_State* L) {
-  int funcindex = 0;
+  int funcindex = 1;
   int uvidx = getenvuvidx(L, funcindex);
-  if (uvidx == -1)
-    return 0;
+  if (uvidx == -1) {
+    lua_pushinteger(L, uvidx);
+    return 1;
+  }
+    
   LClosure *f = lua_topointer(L, funcindex);
   Proto* p = f->p;
   int pc;

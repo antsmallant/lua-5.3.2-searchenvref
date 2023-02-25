@@ -429,7 +429,7 @@ static int db_traceback (lua_State *L) {
 }
 
 
-static int db_searchenvref(lua_State* L) {
+static int db_searchenvref(lua_State *L) {
   return luaG_searchenvref(L, 1);
 }
 

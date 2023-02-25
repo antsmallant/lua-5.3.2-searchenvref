@@ -673,7 +673,7 @@ void luaG_traceexec (lua_State *L) {
 }
 
 
-int getenvuvidx (lua_State* L, int funcindex) {
+int getenvuvidx (lua_State *L, int funcindex) {
   const char *name;
   int i;
   int idx = -1;
@@ -690,7 +690,7 @@ int getenvuvidx (lua_State* L, int funcindex) {
 }
 
 
-void auxsearchenv(lua_State* L, Proto* p, int uvidx) {
+void auxsearchenv(lua_State *L, Proto *p, int uvidx) {
   int pc;
   for (pc = 0; pc < p->sizecode; pc++) {
     Instruction i = p->code[pc];
@@ -730,12 +730,12 @@ void auxsearchenv(lua_State* L, Proto* p, int uvidx) {
 
 
 /* get all keys that a function get/set field from the upvalue _ENV*/
-int luaG_searchenvref (lua_State* L, int funcindex) {
+int luaG_searchenvref (lua_State *L, int funcindex) {
   int uvidx = getenvuvidx(L, funcindex);
   if (uvidx == -1)
     return 0;
-  LClosure* f = cast(LClosure*, lua_topointer(L, funcindex));
-  Proto* p = f->p;
+  LClosure *f = cast(LClosure*, lua_topointer(L, funcindex));
+  Proto *p = f->p;
   lua_newtable(L);
   auxsearchenv(L, p, uvidx);
   return 1;
